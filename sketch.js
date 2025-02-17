@@ -31,18 +31,20 @@ const buffer1 = new Tone.ToneAudioBuffer("audio/mg_meadow_01.wav", () => {
     console.log("buff1 loaded");
     buffers[0] = buffer1
     player.buffer = buffer1;
-    initialize();
-});
-const buffer2 = new Tone.ToneAudioBuffer("audio/KC4.4.wav", () => {
-    buffers[1] = buffer2
-    console.log("buff2 loaded");
-});
-const buffer3 = new Tone.ToneAudioBuffer("audio/mys_05.wav", () => {
-    buffers[2] = buffer3
-    console.log("buff3 loaded");
     loadingBuffers = false;
     visualizeWaveform(buffer1);
+    initialize();
 });
+// const buffer2 = new Tone.ToneAudioBuffer("audio/KC4.4.wav", () => {
+//     buffers[1] = buffer2
+//     console.log("buff2 loaded");
+// });
+// const buffer3 = new Tone.ToneAudioBuffer("audio/mys_05.wav", () => {
+//     buffers[2] = buffer3
+//     console.log("buff3 loaded");
+//     loadingBuffers = false;
+//     visualizeWaveform(buffer1);
+// });
 
 const delay = new Tone.PingPongDelay({
     delayTime: 2,
