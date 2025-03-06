@@ -18,9 +18,12 @@ let rateSlider;
 let grainSlider;
 let overlapSlider;
 let freqSlider;
+let filtDepthSlider;
 let bitsSlider;
 let reverbSlider;
 let volSlider;
+let vibratoSlider;
+let panDepthSlider;
 let waveformData;
 let pitches = [-1200, -500, 0, 700, 1200];
 let filters = ['lowpass', 'highpass'];
@@ -35,16 +38,7 @@ const buffer1 = new Tone.ToneAudioBuffer("audio/mg_meadow_01.wav", () => {
     visualizeWaveform(buffer1);
     initialize();
 });
-// const buffer2 = new Tone.ToneAudioBuffer("audio/KC4.4.wav", () => {
-//     buffers[1] = buffer2
-//     console.log("buff2 loaded");
-// });
-// const buffer3 = new Tone.ToneAudioBuffer("audio/mys_05.wav", () => {
-//     buffers[2] = buffer3
-//     console.log("buff3 loaded");
-//     loadingBuffers = false;
-//     visualizeWaveform(buffer1);
-// });
+
 
 const delay = new Tone.PingPongDelay({
     delayTime: 2,
@@ -61,6 +55,7 @@ const filterNode = new Tone.Filter({
 
 // create an autofilter and start it's LFO
 const autoFilter = new Tone.AutoFilter(0.1).start();
+const autoPanner = new Tone.AutoPanner(0.1).start();
 
 const crusher = new Tone.BitCrusher({
     bits: 16,
@@ -73,9 +68,16 @@ const reverb = new Tone.Reverb({
     wet: 0
 });
 
+const vibrato = new Tone.Vibrato(0.1, 0.5);
+
 const mainGain = new Tone.Gain(gainVal);
 const looperGain = new Tone.Gain(0);
 const looperPreGain = new Tone.Gain(0);
+
+let signal = new Tone.Signal(0.5);
+Tone.Transport.scheduleRepeat(time => {
+    signal.setValueAtTime(Math.random() * 2, time);
+}, "16n");
 
 
 function preload() {
@@ -99,6 +101,8 @@ function setup() {
     overlapSlider.value = random(0, 1);
     freqSlider = document.getElementById('freq')
     freqSlider.value = random(0, 4000);
+    filtDepthSlider = document.getElementById('filtDepth')
+    filtDepthSlider.value = random(0, 1)
     bitsSlider = document.getElementById('bits')
     bitsSlider.value = random(4, 16);
     delayAmtSlider = document.getElementById('delayAmt')
@@ -111,6 +115,11 @@ function setup() {
     reverbSlider.value = random(0, 1);
     volSlider = document.getElementById('vol')
     volSlider.value = 1;
+    vibratoSlider = document.getElementById('vibrato')
+    vibratoSlider.value = random(0, 1)
+    panDepthSlider = document.getElementById('panDepth')
+    panDepthSlider.value = random(0, 1)
+
     cnv = createCanvas(pitchSlider.clientWidth + 10, 200);
     cnv.parent('canvas-container');
     x1 = 0;
@@ -185,16 +194,16 @@ function draw() {
 
 
         // snap pitch to octaves and fifths
-        if (pitchSlider.value < 75 && pitchSlider.value > -75) {
-            pitchSlider.value = 0;
-        } else if (pitchSlider.value < 775 && pitchSlider.value > 625) {
+        if (pitchSlider.value > 900) {
+            pitchSlider.value = 1200
+        } else if (pitchSlider.value > 500) {
             pitchSlider.value = 700;
-        } else if (pitchSlider.value < -425 && pitchSlider.value > -575) {
-            pitchSlider.value = -500;
-        } else if (pitchSlider.value < -1150) {
+        } else if (pitchSlider.value > -300) {
+            pitchSlider.value = 0;
+        } else if (pitchSlider.value > -900) {
+            pitchSlider.value = -700;
+        } else {
             pitchSlider.value = -1200;
-        } else if (pitchSlider.value > 1150) {
-            pitchSlider.value = 11200;
         }
         player.grainSize = grainSlider.value;
         player.overlap = overlapSlider.value;
@@ -206,7 +215,10 @@ function draw() {
         reverb.wet.value = reverbSlider.value;
         mainGain.gain.value = volSlider.value;
         autoFilter.baseFrequency = freqSlider.value;
+        autoFilter.depth.value = filtDepthSlider.value;
         crusher.bits.value = map(bitsSlider.value, 4, 16, 16, 4);
+        vibrato.depth.value = vibratoSlider.value;
+        autoPanner.depth.value = panDepthSlider.value;
     }
 }
 
@@ -256,7 +268,7 @@ function getPressedPoint() {
     pressedPoint = map(mouseX, 0, width, 0, 1);
     x1 = mouseX;
     y1 = mouseY;
-    // console.log('pressedPoint: ' + pressedPoint)
+    console.log(x1);
 }
 
 function getReleasePoint() {
@@ -264,16 +276,22 @@ function getReleasePoint() {
     releasePoint = map(mouseX, 0, width, 0, 1);
     x2 = mouseX;
     y2 = mouseY;
+    console.log(x2);
     // Calculate loop start and end points
     calculateLoop();
-    randomizeVals();
-    // console.log('releasedPoint: ' + releasePoint)
+
 }
 
-function calculateLoop() {
+function calculateLoop(midiStart, midiEnd) {
+    if (midiStart && midiEnd) {
+        loopStart = midiStart * buffers[bufferIndex].duration;;
+        loopEnd = midiEnd * buffers[bufferIndex].duration;;
+    } else {
+        loopStart = pressedPoint * buffers[bufferIndex].duration;
+        loopEnd = releasePoint * buffers[bufferIndex].duration;
+    }
+    console.log(loopStart, loopEnd);
     // Calculate loop start and end points in relation to current buffer's duration
-    loopStart = pressedPoint * buffers[bufferIndex].duration;
-    loopEnd = releasePoint * buffers[bufferIndex].duration;
     mainGain.gain.rampTo(0, 1);
     player.stop("+1")
         // If mouse dragged left to right, play forwards
@@ -294,6 +312,7 @@ function calculateLoop() {
             mainGain.gain.rampTo(1, 1, "+1.01");
         }
     }
+    randomizeVals();
 }
 
 function randomizeVals() {
@@ -303,12 +322,18 @@ function randomizeVals() {
     overlapSlider.value = random(0.01, 2);
     freqSlider.value = random(100, 4000);
     autoFilter.frequency.value = random(0.001, 0.400);
+    autoFilter.depth.value = random(0, 1);
     autoFilter.octaves = random(1, 3);
     autoFilter.filter.Q.value = random(5, 15);
+    autoPanner.frequency.value = random(0.001, 1);
+    autoPanner.depth.value = random(0, 1);
     delayAmtSlider.value = random(0, 1);
     delayTimeSlider.value = random(0, 1);
     delayFbackSlider.value = random(0, 0.5);
     reverbSlider.value = random(0, 1);
+    vibratoSlider.value = random(0, 1);
+    filtDepthSlider.value = random(0, 1);
+    panDepthSlider.value = random(0, 1);
 }
 
 function changeBuffer(direction) {
@@ -357,7 +382,9 @@ function initialize() {
     player.playbackRate = 1;
     autoFilter.filter.Q.value = 10;
     reverb.toDestination();
-    player.chain(mainGain, crusher, autoFilter, delay, reverb);
+    player.chain(mainGain, crusher, vibrato, autoFilter, autoPanner, delay, reverb);
+    // lfo.connect(player.detune);
+    signal.connect(vibrato.frequency);
     player.loopStart = 0;
     player.loopEnd = buffers[bufferIndex].duration;
 }
