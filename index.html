@@ -8,25 +8,28 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.1/p5.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.9/Tone.js" integrity="sha512-nUjml8mN4CNYqBAy0ndDrd8pJV/eTtBNDsnvNtPqozx9/BccUeWSoKW14qWkQUnhuh8E3m+yra3qdzM68lqPEQ==" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.6.3.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/webmidi@next/dist/iife/webmidi.iife.js"></script>
+    <script src="midi.js"></script>
     <title>poco looper</title>
 </head>
 
 <body>
-    <script src="sketch.js"></script>
     <main>
         <div id="canvas-container"></div>
         <div id="slider-container">
             <div class="slider-group" id="buffer">
                 <label for="pitch">playback</label>
                 <input class="slide" id="pitch" type="range" min="-1200" max="1200" step="0.1">
-                <input class="slide" id="rate" type="range" min="0" max="2" step="0.01">
+                <input class="slide" id="rate" type="range" min="0.05" max="4" step="0.01">
                 <input class="slide" id="grain" type="range" min="0" max="2" step="0.01">
                 <input class="slide" id="overlap" type="range" min="0" max="2" step="0.01">
             </div>
             <div class="slider-group" id="filter">
                 <label for="freq">character</label>
                 <input class="slide" id="freq" type="range" min="100" max="4000" step="1">
+                <input class="slide" id="filtDepth" type="range" min="0" max="1" step="0.01">
                 <input class="slide" id="bits" type="range" min="4" max="16" step="0.1">
+                <input class="slide" id="vibrato" type="range" min="0" max="1" step="0.01">
             </div>
             <div class="slider-group" id="time-fx">
                 <label for="delayAmt">space & time</label>
@@ -38,6 +41,7 @@
             <div class="slider-group" id="output">
                 <label for="vol">output</label>
                 <input class="slide" id="vol" type="range" min="0" max="2" step="0.01">
+                <input class="slide" id="panDepth" type="range" min="0" max="1" step="0.01">
             </div>
         </div>
         <div id="file-upload-container">
@@ -46,7 +50,9 @@
                 <p class="easter_egg" id="click-me">upload</p>
             </label>
         </div>
+        <div id="container"></div>
     </main>
+    <script src="sketch.js"></script>
 </body>
 
 </html>
