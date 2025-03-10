@@ -2,12 +2,13 @@
 WebMidi
     .enable()
     .then(onEnabled)
-    .catch(err => alert(err));
+    .catch(err => console.log(err));
 
 
 let keysPressed = 0;
 let midiLoopStart = 0;
 let midiLoopEnd = 1;
+let midiInput, midiOutput;
 
 // Function triggered when WebMidi.js is ready
 function onEnabled() {
@@ -22,45 +23,7 @@ function onEnabled() {
         midiInput = WebMidi.getInputByName(selectElem.value);
         midiOutput = WebMidi.getOutputByName(selectElem.value);
 
-        midiInput.addListener("controlchange", e => {
-
-            let channel = e.target.number;
-            let parameter = e.data[1];
-            let value = e.data[2];
-            console.log(channel, parameter, value)
-            doMidiStuff(channel, parameter, value);
-
-        });
-
-        midiInput.channels[1].addListener("noteon", e => {
-            console.log(e.data)
-            let note = e.data[1];
-            if (note >= 53 && note <= 72) {
-                keysPressed++;
-                if (keysPressed == 1) {
-                    midiLoopStart = map(note, 53, 72, 0, 1);
-                    x1 = map(note, 53, 72, 0, width)
-                } else if (keysPressed == 2) {
-                    midiLoopEnd = map(note, 53, 72, 0, 1);
-                    x2 = map(note, 53, 72, 0, width);
-                    calculateLoop(midiLoopStart, midiLoopEnd);
-                }
-            } else if (note == 74) {
-                changeBuffer('previous');
-            } else if (note == 76) {
-                changeBuffer('next');
-            } else if (note == 75) {
-                startStopPlayer();
-            }
-        });
-        midiInput.channels[1].addListener("noteoff", e => {
-            let note = e.data[1];
-            if (note >= 53 && note <= 72) {
-                keysPressed--;
-            }
-        });
-
-
+        addMidiEventListeners()
     })
 }
 
@@ -71,14 +34,63 @@ function populateDeviceList() {
     select.id = "devices"
     for (const val of values) {
         const device = val.name;
+
         const option = document.createElement("option");
         option.value = device;
         option.text = device.charAt(0).toUpperCase() + device.slice(1);
+        if (option.value.includes("OP-Z")) {
+            console.log('opz')
+            option.selected = true;
+            midiInput = WebMidi.getInputByName(option.value);
+            midiOutput = WebMidi.getInputByName(option.value);
+            addMidiEventListeners();
+        }
+        console.log(option.selected);
         select.appendChild(option);
     }
     var label = document.createElement("label");
     label.htmlFor = "devices";
     document.getElementById("container").appendChild(label).appendChild(select);
+}
+
+function addMidiEventListeners() {
+    midiInput.addListener("controlchange", e => {
+
+        let channel = e.target.number;
+        let parameter = e.data[1];
+        let value = e.data[2];
+        console.log(channel, parameter, value)
+        doMidiStuff(channel, parameter, value);
+
+    });
+
+    midiInput.channels[1].addListener("noteon", e => {
+        console.log(e.data)
+        let note = e.data[1];
+        if (note >= 53 && note <= 72) {
+            keysPressed++;
+            if (keysPressed == 1) {
+                midiLoopStart = map(note, 53, 72, 0, 1);
+                x1 = map(note, 53, 72, 0, width)
+            } else if (keysPressed == 2) {
+                midiLoopEnd = map(note, 53, 72, 0, 1);
+                x2 = map(note, 53, 72, 0, width);
+                calculateLoop(midiLoopStart, midiLoopEnd);
+            }
+        } else if (note == 74) {
+            changeBuffer('previous', 'midi');
+        } else if (note == 76) {
+            changeBuffer('next', 'midi');
+        } else if (note == 75) {
+            startStopPlayer();
+        }
+    });
+    midiInput.channels[1].addListener("noteoff", e => {
+        let note = e.data[1];
+        if (note >= 53 && note <= 72) {
+            keysPressed--;
+        }
+    });
 }
 
 function doMidiStuff(channel, parameter, value) {

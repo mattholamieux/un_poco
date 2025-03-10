@@ -31,7 +31,7 @@ const player = new Tone.GrainPlayer();
 let loadingBuffers = true;
 const buffers = [];
 let filesLoaded = false;
-const buffer1 = new Tone.ToneAudioBuffer("audio/mg_meadow_01.wav", () => {
+const buffer1 = new Tone.ToneAudioBuffer("../audio/mg_meadow_01.wav", () => {
     console.log("buff1 loaded");
     buffers[0] = buffer1
     player.buffer = buffer1;
@@ -82,11 +82,11 @@ Tone.Transport.scheduleRepeat(time => {
 
 
 function preload() {
-    playIcon = loadImage("icons/Play-icon.png");
-    stopIcon = loadImage("icons/pause.png");
-    nextIcon = loadImage('icons/right2.png');
-    prevIcon = loadImage('icons/left2.png');
-    font = loadFont('font/ViksjoeTrial-Regular.otf');
+    playIcon = loadImage("../icons/Play-icon.png");
+    stopIcon = loadImage("../icons/pause.png");
+    nextIcon = loadImage('../icons/right2.png');
+    prevIcon = loadImage('../icons/left2.png');
+    font = loadFont('../font/ViksjoeTrial-Regular.otf');
 }
 
 function setup() {
@@ -120,8 +120,11 @@ function setup() {
     vibratoSlider.value = random(0, 1)
     panDepthSlider = document.getElementById('panDepth')
     panDepthSlider.value = random(0, 1)
-
-    cnv = createCanvas(pitchSlider.clientWidth + 10, 200);
+    if (windowWidth > 500) {
+        cnv = createCanvas(400, 200);
+    } else {
+        cnv = createCanvas(300, 200);
+    }
     cnv.parent('canvas-container');
     x1 = 0;
     x2 = width;
@@ -178,7 +181,7 @@ function draw() {
         strokeWeight(2);
         if (waveformData) {
             for (let i = 0; i < waveformData.length; i++) {
-                let xPos = i * ((pitchSlider.clientWidth + 10) / 70);
+                let xPos = i * ((width + 10) / 70);
                 rect(xPos, 150, 1, map(waveformData[i], 0, 1, 0, 20));
             }
         }
