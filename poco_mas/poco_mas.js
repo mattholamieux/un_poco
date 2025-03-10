@@ -31,7 +31,7 @@ const player = new Tone.GrainPlayer();
 let loadingBuffers = true;
 const buffers = [];
 let filesLoaded = false;
-const buffer1 = new Tone.ToneAudioBuffer("audio/mg_meadow_01.wav", () => {
+const buffer1 = new Tone.ToneAudioBuffer("../audio/mg_meadow_01.wav", () => {
     console.log("buff1 loaded");
     buffers[0] = buffer1
     player.buffer = buffer1;
@@ -82,11 +82,11 @@ Tone.Transport.scheduleRepeat(time => {
 
 
 function preload() {
-    playIcon = loadImage("icons/Play-icon.png");
-    stopIcon = loadImage("icons/pause.png");
-    nextIcon = loadImage('icons/right2.png');
-    prevIcon = loadImage('icons/left2.png');
-    font = loadFont('font/ViksjoeTrial-Regular.otf');
+    playIcon = loadImage("../icons/Play-icon.png");
+    stopIcon = loadImage("../icons/pause.png");
+    nextIcon = loadImage('../icons/right2.png');
+    prevIcon = loadImage('../icons/left2.png');
+    font = loadFont('../font/ViksjoeTrial-Regular.otf');
 }
 
 function setup() {
@@ -313,7 +313,7 @@ function calculateLoop(midiStart, midiEnd) {
             mainGain.gain.rampTo(1, 1, "+1.01");
         }
     }
-    randomizeVals();
+    // randomizeVals();
 }
 
 function randomizeVals() {
@@ -421,6 +421,11 @@ audio_file.onchange = function() {
         });
     }
 };
+
+let randoButton = document.getElementById('rando-button');
+randoButton.addEventListener("click", () => {
+    randomizeVals();
+});
 
 // document.addEventListener("DOMContentLoaded", function(event) {
 //     let audio_file = document.getElementById('audio_file');
