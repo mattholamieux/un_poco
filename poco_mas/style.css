@@ -63,14 +63,15 @@ canvas {
 }
 
 label {
-    padding: 5px 5px 0px 5px;
+    /* padding: 5px 5px 0px 5px; */
     font-family: 'viksjoe', sans-serif;
 }
 
 #click-me {
-    border: solid black 2px;
+    /* border: solid black 2px; */
     padding: 5px;
     border-radius: 5px;
+    text-align: center;
 }
 
 button {
@@ -86,6 +87,10 @@ button {
 
 #click-me:hover {
     background-color: #d8cfcf63;
+}
+
+#myAudio {
+    margin-top: 10px;
 }
 
 @media only screen and (max-width: 600px) {

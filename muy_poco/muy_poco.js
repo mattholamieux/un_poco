@@ -405,37 +405,37 @@ function initialize() {
     player.loopEnd = buffers[bufferIndex].duration;
 }
 
-let audio_file = document.getElementById('audio_file');
-audio_file.onchange = function() {
-    if (!filesLoaded) {
-        buffers.pop();
-        filesLoaded = true;
-    }
-    for (let i = 0; i < this.files.length; i++) {
-        let file = URL.createObjectURL(this.files[i]);
-        let buffer = new Tone.ToneAudioBuffer(file, () => {
-            buffers.push(buffer);
-            console.log('buffer loaded')
-            if (i === this.files.length - 1) {
-                player.buffer = buffers[0];
-                bufferIndex = 0;
-                visualizeWaveform(buffer);
-            }
-        });
-    }
-};
-
-// document.addEventListener("DOMContentLoaded", function(event) {
-//     let audio_file = document.getElementById('audio_file');
-//     audio_file.onchange = function() {
-//         var file = URL.createObjectURL(this.files[0]);
+// let audio_file = document.getElementById('audio_file');
+// audio_file.onchange = function() {
+//     if (!filesLoaded) {
+//         buffers.pop();
+//         filesLoaded = true;
+//     }
+//     for (let i = 0; i < this.files.length; i++) {
+//         let file = URL.createObjectURL(this.files[i]);
 //         let buffer = new Tone.ToneAudioBuffer(file, () => {
-//             console.log('file loaded')
-//             buffers.unshift(buffer);
-//             player.buffer = buffers[0];
-//             bufferIndex = 0;
-//             calculateLoop();
-//             visualizeWaveform(buffer);
+//             buffers.push(buffer);
+//             console.log('buffer loaded')
+//             if (i === this.files.length - 1) {
+//                 player.buffer = buffers[0];
+//                 bufferIndex = 0;
+//                 visualizeWaveform(buffer);
+//             }
 //         });
-//     };
-// });
+//     }
+// };
+
+document.addEventListener("DOMContentLoaded", function(event) {
+    let audio_file = document.getElementById('audio_file');
+    audio_file.onchange = function() {
+        var file = URL.createObjectURL(this.files[0]);
+        let buffer = new Tone.ToneAudioBuffer(file, () => {
+            console.log('file loaded')
+            buffers.unshift(buffer);
+            player.buffer = buffers[0];
+            bufferIndex = 0;
+            calculateLoop();
+            visualizeWaveform(buffer);
+        });
+    };
+});
