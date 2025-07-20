@@ -229,17 +229,31 @@ function draw() {
     }
 }
 
+function touchStarted() {
+    if (dist(mouseX, mouseY, (width / 2) - 87.5, 50) < 20) {
+        // console.log('previous');
+        changeBuffer('touch previous');
+    } else if (dist(mouseX, mouseY, (width / 2) + 87.5, 50) < 20) {
+        // console.log('next')
+        changeBuffer('touch next');
+    } else if (mouseX > 0 && mouseX < width && mouseY > 113 && mouseY < 190) {
+        getPressedPoint();
+    }
+}
+
 function mousePressed() {
     if (dist(mouseX, mouseY, width / 2, 50) < 20) {
         startStopPlayer();
+        console.log('play / stop')
     } else if (dist(mouseX, mouseY, (width / 2) - 87.5, 50) < 20) {
-        // console.log('previous');
+        console.log('previous');
         changeBuffer('previous');
     } else if (dist(mouseX, mouseY, (width / 2) + 87.5, 50) < 20) {
-        // console.log('next')
+        console.log('next')
         changeBuffer('next');
     } else if (mouseX > 0 && mouseX < width && mouseY > 113 && mouseY < 190) {
         getPressedPoint();
+        console.log('pressed point')
     }
 }
 
