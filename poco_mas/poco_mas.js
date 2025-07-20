@@ -1,3 +1,6 @@
+// let bgs = ["url(/UNO.jpg)", "url(/DOS.jpeg)", "url(/TRES.JPEG)", "url(/CUATRO.jpg)", "url(/cinco.png)"];
+let currentBG = 1;
+// document.body.style.backgroundImage = bgs[currentBG];
 let font;
 let x1 = 0,
     x2 = 0,
@@ -92,11 +95,16 @@ function preload() {
     font = loadFont('../font/ViksjoeTrial-Regular.otf');
 }
 
+
 function setup() {
     imageMode(CENTER);
     // sliders
     pitchSlider = document.getElementById('pitch')
     pitchSlider.value = random(pitches)
+        // pitchSlider.addEventListener('change', () => {
+        //     console.log(map(pitchSlider.value, -1200, 1200, 0, 127));
+        //     midiOutput.channels[1].sendControlChange(2, map(pitchSlider.value, -1200, 1200, 0, 127))
+        // })
     rateSlider = document.getElementById('rate')
     rateSlider.value = random(0, 4)
     grainSlider = document.getElementById('grain')
@@ -144,8 +152,10 @@ function draw() {
     } else {
         noFill();
         strokeWeight(2);
+        fill('#5957578c')
+            // fill('#fcfcfc75')
         if (mouseX > 0 && mouseX < width && mouseY > 0 && mouseY < 100) {
-            fill('#d8cfcf63')
+            fill('#fcfcfc50')
         }
         rect(width / 2, 50, width, 100, 5)
             // draw play/stop icons
@@ -187,14 +197,14 @@ function draw() {
             }
         }
         // draw click & drag box
-        noFill();
         if (mouseX > 0 && mouseX < width && mouseY > 113 && mouseY < 190) {
-            fill('#d8cfcf63')
+            fill('#fcfcfc50')
         }
         rect(width / 2, 150, width, 75, 5)
         noStroke();
-        fill(73, 87, 76, 100);
         rectMode(CORNER);
+        fill('#5957578c')
+            // fill('#fcfcfc75')
         rect(x1, 113, x2 - x1, 75);
 
 
@@ -233,9 +243,13 @@ function mousePressed() {
     } else if (dist(mouseX, mouseY, (width / 2) - 87.5, 50) < 20) {
         console.log('previous');
         changeBuffer('previous');
+        currentBG--;
+        document.body.style.backgroundImage = bgs[currentBG % bgs.length];
     } else if (dist(mouseX, mouseY, (width / 2) + 87.5, 50) < 20) {
         console.log('next')
         changeBuffer('next');
+        currentBG++;
+        document.body.style.backgroundImage = bgs[currentBG % bgs.length];
     } else if (mouseX > 0 && mouseX < width && mouseY > 113 && mouseY < 190) {
         getPressedPoint();
     }
@@ -445,6 +459,7 @@ recButton.addEventListener("click", () => {
         recButton.style.background = 'rgba(255, 96, 0, 0.33)'
     }
 });
+
 
 
 
