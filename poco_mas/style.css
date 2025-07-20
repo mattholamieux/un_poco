@@ -1,11 +1,14 @@
 body {
     height: 100vh;
     padding-top: 2vh;
-    background-color: #000;
-    background: linear-gradient(-45deg, #f2e2055e, #d9be364f, #F29F054f, #0511F24f, #183F8C4f, #1F3B734f, #0D0D0D4f);
-    /* background: linear-gradient(-45deg, #F2E205, #D9BE36, #F29F05, #0511F2, #183F8C, #1F3B73, #0D0D0D); */
-    background-size: 400% 400%;
-    animation: gradient 15s ease infinite;
+    /* background: linear-gradient(-45deg, #f2e2055e, #d9be364f, #F29F054f, #0511F24f, #183F8C4f, #1F3B734f, #0D0D0D4f); */
+    background-image: url("/bg_01.jpg");
+    background-size: 100%;
+    background-repeat: repeat-y;
+    background-color: #7f7a7a;
+    /* background-blend-mode: darken; */
+    /* background-size: 400% 400%; */
+    /* animation: gradient 15s ease infinite; */
 }
 
 @keyframes gradient {
@@ -48,22 +51,26 @@ canvas {
     margin: 5px auto;
     border: solid 1px black;
     border-radius: 5px;
+    background: #5957578c
+    /* background: #fcfcfc75; */
+    /* padding: 5px; */
 }
 
 .slider-group:hover {
-    background-color: #d8cfcf63;
+    background-color: #4f4f4f63;
 }
 
 .slide {
     width: 98%;
     appearance: none;
     height: 10px;
-    background: #66666670;
+    /* background: #66666670; */
+    background: #fefefe63;
     outline: #000;
 }
 
 label {
-    /* padding: 5px 5px 0px 5px; */
+    margin-left: 5px;
     font-family: 'viksjoe', sans-serif;
 }
 
@@ -93,6 +100,11 @@ button {
     margin-top: 10px;
 }
 
+#midi-channel {
+    display: flex;
+    justify-content: center;
+}
+
 @media only screen and (max-width: 600px) {
     .slide {
         margin: 13px auto;
@@ -110,7 +122,7 @@ button {
         margin: 15px auto;
     }
     .slider-group {
-        width: 80%;
+        width: 60%;
     }
     label {
         font-size: 1.5vw;

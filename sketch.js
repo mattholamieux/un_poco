@@ -29,7 +29,7 @@ let pitches = [-1200, -500, 0, 700, 1200];
 let filters = ['lowpass', 'highpass'];
 const player = new Tone.GrainPlayer();
 let loadingBuffers = true;
-const buffers = [];
+let buffers = [];
 let filesLoaded = false;
 const buffer1 = new Tone.ToneAudioBuffer("audio/mg_meadow_01.wav", () => {
     console.log("buff1 loaded");
@@ -404,10 +404,11 @@ function initialize() {
 
 let audio_file = document.getElementById('audio_file');
 audio_file.onchange = function() {
-    if (!filesLoaded) {
-        buffers.pop();
-        filesLoaded = true;
-    }
+    buffers = [];
+    // if (!filesLoaded) {
+    // buffers.pop();
+    // filesLoaded = true;
+    // }
     for (let i = 0; i < this.files.length; i++) {
         let file = URL.createObjectURL(this.files[i]);
         let buffer = new Tone.ToneAudioBuffer(file, () => {
