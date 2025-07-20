@@ -29,16 +29,17 @@ let pitches = [-1200, -500, 0, 700, 1200];
 let filters = ['lowpass', 'highpass'];
 const player = new Tone.GrainPlayer();
 let loadingBuffers = true;
+let audio_files = ["audio/palm.mp3", "audio/camp.mp3", "audio/noodle_01.mp3", "audio/cap.wav", "audio/crickets.mp3", "audio/noodle_02.mp3", "audio/dogs.mp3", "audio/etla1.mp3", "audio/noodle_04.mp3", "audio/rain.mp3", "audio/scrape.mp3", "audio/noodle_10.mp3", "audio/zocalo.mp3"]
 let buffers = [];
 let filesLoaded = false;
-const buffer1 = new Tone.ToneAudioBuffer("audio/mg_meadow_01.wav", () => {
-    console.log("buff1 loaded");
-    buffers[0] = buffer1
-    player.buffer = buffer1;
-    loadingBuffers = false;
-    visualizeWaveform(buffer1);
-    initialize();
-});
+// const buffer1 = new Tone.ToneAudioBuffer("audio/noodle_01.mp3", () => {
+//     console.log("buff1 loaded");
+//     buffers[0] = buffer1
+//     player.buffer = buffer1;
+//     loadingBuffers = false;
+//     visualizeWaveform(buffer1);
+//     initialize();
+// });
 
 
 const delay = new Tone.PingPongDelay({
@@ -125,6 +126,7 @@ function setup() {
     cnv.parent('canvas-container');
     x1 = 0;
     x2 = width;
+    loadBuffers(audio_files);
 }
 
 function draw() {
@@ -227,10 +229,10 @@ function mousePressed() {
     if (dist(mouseX, mouseY, width / 2, 50) < 20) {
         startStopPlayer();
     } else if (dist(mouseX, mouseY, (width / 2) - 87.5, 50) < 20) {
-        console.log('previous');
+        // console.log('previous');
         changeBuffer('previous');
     } else if (dist(mouseX, mouseY, (width / 2) + 87.5, 50) < 20) {
-        console.log('next')
+        // console.log('next')
         changeBuffer('next');
     } else if (mouseX > 0 && mouseX < width && mouseY > 113 && mouseY < 190) {
         getPressedPoint();
@@ -269,7 +271,7 @@ function getPressedPoint() {
     pressedPoint = map(mouseX, 0, width, 0, 1);
     x1 = mouseX;
     y1 = mouseY;
-    console.log(x1);
+    // console.log(x1);
 }
 
 function getReleasePoint() {
@@ -277,7 +279,7 @@ function getReleasePoint() {
     releasePoint = map(mouseX, 0, width, 0, 1);
     x2 = mouseX;
     y2 = mouseY;
-    console.log(x2);
+    // console.log(x2);
     // Calculate loop start and end points
     calculateLoop();
 
@@ -291,7 +293,7 @@ function calculateLoop(midiStart, midiEnd) {
         loopStart = pressedPoint * buffers[bufferIndex].duration;
         loopEnd = releasePoint * buffers[bufferIndex].duration;
     }
-    console.log(loopStart, loopEnd);
+    // console.log(loopStart, loopEnd);
     // Calculate loop start and end points in relation to current buffer's duration
     mainGain.gain.rampTo(0, 1);
     player.stop("+1")
@@ -400,6 +402,24 @@ function initialize() {
     signal.connect(vibrato.frequency);
     player.loopStart = 0;
     player.loopEnd = buffers[bufferIndex].duration;
+}
+
+function loadBuffers(buff_array) {
+    buffers = [];
+    for (let i = 0; i < buff_array.length; i++) {
+        let file = buff_array[i]
+        let buffer = new Tone.ToneAudioBuffer(file, () => {
+            buffers.push(buffer);
+            console.log(buff_array[i] + " loaded")
+            if (i === buff_array.length - 1) {
+                player.buffer = buffers[0];
+                bufferIndex = 0;
+                loadingBuffers = false;
+                initialize();
+                visualizeWaveform(buffers[0]);
+            }
+        });
+    }
 }
 
 let audio_file = document.getElementById('audio_file');
