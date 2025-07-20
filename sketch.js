@@ -29,7 +29,7 @@ let pitches = [-1200, -500, 0, 700, 1200];
 let filters = ['lowpass', 'highpass'];
 const player = new Tone.GrainPlayer();
 let loadingBuffers = true;
-let audio_files = ["audio/palm.mp3", "audio/camp.mp3", "audio/noodle_01.mp3", "audio/cap.wav", "audio/crickets.mp3", "audio/noodle_02.mp3", "audio/dogs.mp3", "audio/etla1.mp3", "audio/noodle_04.mp3", "audio/rain.mp3", "audio/scrape.mp3", "audio/noodle_10.mp3", "audio/zocalo.mp3"]
+let audio_files = ["audio/xochitle_1.mp3", "audio/palm.mp3", "audio/camp.mp3", "audio/cap.wav", "audio/crickets.mp3", "audio/noodle_02.mp3", "audio/dogs.mp3", "audio/xochitle_2.mp3", "audio/etla1.mp3", "audio/noodle_04.mp3", "audio/rain.mp3", "audio/scrape.mp3", "audio/noodle_10.mp3", "audio/noodle_01.mp3", "audio/zocalo.mp3"]
 let buffers = [];
 let filesLoaded = false;
 // const buffer1 = new Tone.ToneAudioBuffer("audio/noodle_01.mp3", () => {
