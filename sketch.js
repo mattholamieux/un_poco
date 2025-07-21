@@ -337,6 +337,7 @@ function randomizeVals() {
     pitchSlider.value = random(pitches);
     grainSlider.value = random(0.01, 2);
     overlapSlider.value = random(0.01, 2);
+    bitsSlider.value = random(4, 16);
     freqSlider.value = random(100, 4000);
     autoFilter.frequency.value = random(0.001, 0.400);
     autoFilter.depth.value = random(0, 1);
